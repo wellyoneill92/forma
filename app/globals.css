@@ -1,34 +1,18 @@
 @import "tailwindcss";
 
-:root {
-  --forma-bg: #0C0C0E;
-  --forma-surface: #141416;
-  --forma-surface-raised: #1A1A1E;
-  --forma-border: #1E1E24;
-  --forma-border-subtle: #161619;
-  --forma-text: #F0F0F2;
-  --forma-text-secondary: #6B6B78;
-  --forma-text-muted: #3A3A44;
-  --forma-accent: #C8FF57;
-  --forma-accent-dim: rgba(200, 255, 87, 0.12);
-  --forma-red: #FF4444;
-  --forma-amber: #FFB347;
-  --forma-green: #4ADE80;
-}
-
-@theme inline {
-  --color-forma-bg: var(--forma-bg);
-  --color-forma-surface: var(--forma-surface);
-  --color-forma-surface-raised: var(--forma-surface-raised);
-  --color-forma-border: var(--forma-border);
-  --color-forma-text: var(--forma-text);
-  --color-forma-text-secondary: var(--forma-text-secondary);
-  --color-forma-text-muted: var(--forma-text-muted);
-  --color-forma-accent: var(--forma-accent);
-  --color-forma-accent-dim: var(--forma-accent-dim);
-  --color-forma-red: var(--forma-red);
-  --color-forma-amber: var(--forma-amber);
-  --color-forma-green: var(--forma-green);
+@theme {
+  --color-forma-bg: #F2F2F7;
+  --color-forma-surface: #FFFFFF;
+  --color-forma-border: #E5E5EA;
+  --color-forma-text: #1C1C1E;
+  --color-forma-text-secondary: #636366;
+  --color-forma-text-muted: #767676;
+  --color-forma-accent: #C8FF57;
+  --color-forma-accent-text: #3A6800;
+  --color-forma-accent-dim: rgba(200,255,87,0.3);
+  --color-forma-red: #FF3B30;
+  --color-forma-amber: #FF9500;
+  --color-forma-green: #34C759;
 
   --font-display: var(--font-syne);
   --font-body: var(--font-dm-sans);
@@ -36,47 +20,27 @@
 }
 
 body {
-  background: var(--forma-bg);
-  color: var(--forma-text);
+  background: #F2F2F7;
+  color: #1C1C1E;
   font-family: var(--font-dm-sans), system-ui, sans-serif;
   font-size: 15px;
   line-height: 1.6;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3 {
   font-family: var(--font-syne), system-ui, sans-serif;
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.02em;
 }
 
-code, pre, .mono {
-  font-family: var(--font-dm-mono), monospace;
-}
-
 ::selection {
-  background: var(--forma-accent-dim);
-  color: var(--forma-accent);
+  background: rgba(200,255,87,0.3);
+  color: #3A6800;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--forma-border);
-  border-radius: 2px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--forma-text-muted);
-}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #E5E5EA; border-radius: 2px; }

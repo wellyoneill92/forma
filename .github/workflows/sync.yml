@@ -1,0 +1,35 @@
+name: Garmin Sync
+
+on:
+  schedule:
+    - cron: '0 20 * * *'   # 6:00 am AEST (UTC+10)
+    - cron: '0 11 * * *'   # 9:00 pm AEST (UTC+10)
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'Days to sync (default 7)'
+        default: '7'
+        required: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install garmin_mcp garminconnect httpx python-dotenv
+
+      - name: Run sync
+        env:
+          GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
+          GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python scripts/sync.py --days ${{ github.event.inputs.days || '7' }}

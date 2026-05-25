@@ -35,8 +35,10 @@ export default function RootLayout({
       lang="en"
       className={`${syne.variable} ${dmSans.variable} ${dmMono.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col bg-forma-bg text-forma-text antialiased">
-        {children}
+      <body className="min-h-full bg-forma-bg text-forma-text antialiased">
+        <main className="min-h-screen">
+          {children}
+        </main>
       </body>
     </html>
   );
