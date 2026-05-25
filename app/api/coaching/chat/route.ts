@@ -15,11 +15,19 @@ export async function POST(req: Request) {
   }
 
   const { message, history = [] } = body;
-  if (!message) {
-    return new Response(JSON.stringify({ error: "message is required" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+
+  if (!message || typeof message !== "string") {
+    return new Response(JSON.stringify({ error: "message is required" }), { status: 400 });
+  }
+  if (message.length > 4000) {
+    return new Response(JSON.stringify({ error: "message too long" }), { status: 400 });
+  }
+  if (!Array.isArray(history) || history.length > 40) {
+    return new Response(JSON.stringify({ error: "invalid history" }), { status: 400 });
+  }
+  // History must alternate roles: user, assistant, user, assistant…
+  if (history.some((m, i) => m.role !== (i % 2 === 0 ? "user" : "assistant"))) {
+    return new Response(JSON.stringify({ error: "history roles must alternate user/assistant" }), { status: 400 });
   }
 
   const ctx = await buildCoachingContext();
@@ -37,7 +45,7 @@ export async function POST(req: Request) {
       } catch (err) {
         console.error("[coaching/chat]", err);
         controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify({ error: String(err) })}\n\n`)
+          encoder.encode(`data: ${JSON.stringify({ error: "Something went wrong" })}\n\n`)
         );
       } finally {
         controller.close();

@@ -80,7 +80,7 @@ Each day must have exactly one entry. For double-session days, combine both sess
 type CachedText = {
   type: "text";
   text: string;
-  cache_control: { type: "ephemeral"; ttl: string };
+  cache_control: { type: "ephemeral"; ttl: "5m" | "1h" };
 };
 
 type PlainText = {
@@ -145,7 +145,11 @@ export async function generateWeeklyPlan(
     .replace(/^```(?:json)?\n?/, "")
     .replace(/\n?```$/, "")
     .trim();
-  return JSON.parse(raw);
+  try {
+    return JSON.parse(raw);
+  } catch {
+    throw new Error(`Model returned invalid JSON: ${raw.substring(0, 300)}`);
+  }
 }
 
 export async function* streamChat(

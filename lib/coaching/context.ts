@@ -43,6 +43,10 @@ function buildGoalText(
   const raceDate = goal.race_date as string;
   const distanceKm = (goal.distance_meters as number) / 1000;
   const targetSec = goal.target_time_seconds as number;
+
+  if (!distanceKm || !targetSec) {
+    return "## Goal\nGoal data incomplete — distance or target time is missing.\n";
+  }
   const th = Math.floor(targetSec / 3600);
   const tm = Math.floor((targetSec % 3600) / 60);
   const ts = targetSec % 60;
@@ -157,7 +161,8 @@ function buildContextText(
 }
 
 export async function buildCoachingContext(): Promise<CoachingContext> {
-  const today = new Date().toISOString().split("T")[0];
+  // Use Melbourne time — Vercel servers run UTC and Jack is AEST/AEDT (UTC+10/+11)
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Melbourne" });
   const weekStart = getMondayOfWeek(today);
   const twoWeeksAgo = subDays(today, 14);
 

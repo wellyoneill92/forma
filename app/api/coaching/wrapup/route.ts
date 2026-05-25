@@ -9,8 +9,15 @@ export async function POST() {
   try {
     const ctx = await buildCoachingContext();
 
+    // Bound both ends of the week so future-dated or timezone-shifted activities
+    // don't leak into the summary.
+    const weekEnd = new Date(ctx.weekStart + "T00:00:00Z");
+    weekEnd.setUTCDate(weekEnd.getUTCDate() + 7);
+    const weekEndStr = weekEnd.toISOString().split("T")[0];
+
+    // PostgREST `and` filter for a bounded date range on the same column
     const weekActivities = await dbQuery("activities", {
-      start_time: `gte.${ctx.weekStart}T00:00:00`,
+      and: `(start_time.gte.${ctx.weekStart}T00:00:00,start_time.lte.${weekEndStr}T23:59:59)`,
       order: "start_time.asc",
       limit: "20",
     });
@@ -31,9 +38,6 @@ export async function POST() {
     return NextResponse.json({ summary, weekStart: ctx.weekStart });
   } catch (err) {
     console.error("[coaching/wrapup]", err);
-    return NextResponse.json(
-      { error: "Failed to generate wrapup", detail: String(err) },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to generate wrapup" }, { status: 500 });
   }
 }

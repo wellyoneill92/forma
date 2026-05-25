@@ -20,9 +20,6 @@ export async function POST() {
     return NextResponse.json({ plan, weekStart: ctx.weekStart });
   } catch (err) {
     console.error("[coaching/plan]", err);
-    return NextResponse.json(
-      { error: "Failed to generate plan", detail: String(err) },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to generate plan" }, { status: 500 });
   }
 }

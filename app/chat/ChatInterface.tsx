@@ -50,10 +50,11 @@ export default function ChatInterface() {
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
+      let done = false;
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+      while (!done) {
+        const { done: streamDone, value } = await reader.read();
+        if (streamDone) break;
 
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split("\n");
@@ -62,7 +63,7 @@ export default function ChatInterface() {
         for (const line of lines) {
           if (!line.startsWith("data: ")) continue;
           const payload = line.slice(6).trim();
-          if (payload === "[DONE]") break;
+          if (payload === "[DONE]") { done = true; break; }
           try {
             const { text: chunk, error } = JSON.parse(payload);
             if (error) throw new Error(error);

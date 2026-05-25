@@ -377,6 +377,8 @@ async def sync_personal_records(garmin: GarminClient, http: httpx.AsyncClient) -
 async def main(days: int) -> None:
     email = os.environ.get("GARMIN_EMAIL", "")
     password = os.environ.get("GARMIN_PASSWORD", "")
+    if not email or not password:
+        sys.exit("GARMIN_EMAIL and GARMIN_PASSWORD must be set")
     token_dir = default_token_dir()
 
     garmin = GarminClient(email=email, password=password, token_dir=token_dir)
