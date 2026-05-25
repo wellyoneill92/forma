@@ -345,7 +345,7 @@ async def sync_fitness(garmin: GarminClient, http: httpx.AsyncClient) -> None:
             "vo2_max_cycling": fm.vo2_max_cycling,
             "fitness_age": fm.fitness_age,
             "race_predictions": [p.model_dump() for p in fm.race_predictions],
-        }], http)
+        }], http, on_conflict="date")
 
 
 async def sync_personal_records(garmin: GarminClient, http: httpx.AsyncClient) -> None:
