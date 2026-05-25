@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Forma
 
-## Getting Started
+Personal AI coaching intelligence for elite amateur endurance athletes.
 
-First, run the development server:
+Forma reasons like a coach. Runna and Training Peaks deliver plans. Forma thinks.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Stack
+
+- **Next.js 15** (App Router, TypeScript)
+- **Supabase** (Postgres — data layer and source of truth for hosted app)
+- **Vercel** (deployment)
+- **Anthropic API** (claude-sonnet-4-20250514 — coaching brain)
+- **garmin_mcp** (local Garmin data layer — 110+ tools via taxuspt/garmin_mcp)
+- **Python sync script** (local Garmin → Supabase bridge)
+
+## Architecture
+
+All Garmin authentication stays local. A scheduled Python script pulls from Garmin Connect via garmin_mcp and writes to Supabase. The hosted Vercel app reads only from Supabase — Garmin credentials never leave the athlete's machine.
+
+```
+Garmin Connect
+      │
+      ▼ (local, authenticated)
+ garmin_mcp
+      │
+      ▼
+ sync.py (Python, runs locally or via cron)
+      │
+      ▼
+ Supabase (Postgres) ◄──── Vercel (Next.js)
+                                   │
+                                   ▼
+                          Anthropic API (coaching brain)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+ANTHROPIC_API_KEY=
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Copy `.env.local.example` to `.env.local` and fill in values.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/
+├── page.tsx          # / — Weekly coaching view
+├── goals/            # /goals — Goal management
+├── history/          # /history — Training history
+├── chat/             # /chat — Open coaching chat
+└── sync/             # /sync — Data sync status
+```

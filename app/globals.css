@@ -1,26 +1,82 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --forma-bg: #0C0C0E;
+  --forma-surface: #141416;
+  --forma-surface-raised: #1A1A1E;
+  --forma-border: #1E1E24;
+  --forma-border-subtle: #161619;
+  --forma-text: #F0F0F2;
+  --forma-text-secondary: #6B6B78;
+  --forma-text-muted: #3A3A44;
+  --forma-accent: #C8FF57;
+  --forma-accent-dim: rgba(200, 255, 87, 0.12);
+  --forma-red: #FF4444;
+  --forma-amber: #FFB347;
+  --forma-green: #4ADE80;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-forma-bg: var(--forma-bg);
+  --color-forma-surface: var(--forma-surface);
+  --color-forma-surface-raised: var(--forma-surface-raised);
+  --color-forma-border: var(--forma-border);
+  --color-forma-text: var(--forma-text);
+  --color-forma-text-secondary: var(--forma-text-secondary);
+  --color-forma-text-muted: var(--forma-text-muted);
+  --color-forma-accent: var(--forma-accent);
+  --color-forma-accent-dim: var(--forma-accent-dim);
+  --color-forma-red: var(--forma-red);
+  --color-forma-amber: var(--forma-amber);
+  --color-forma-green: var(--forma-green);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-display: var(--font-syne);
+  --font-body: var(--font-dm-sans);
+  --font-mono: var(--font-dm-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--forma-bg);
+  color: var(--forma-text);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-syne), system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+code, pre, .mono {
+  font-family: var(--font-dm-mono), monospace;
+}
+
+::selection {
+  background: var(--forma-accent-dim);
+  color: var(--forma-accent);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--forma-border);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--forma-text-muted);
 }
