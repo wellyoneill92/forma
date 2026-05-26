@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
     inputs:
       days:
-        description: 'Days to sync (default 7)'
-        default: '7'
+        description: 'Days to sync (default 2)'
+        default: '2'
         required: false
 
 jobs:
@@ -32,4 +32,4 @@ jobs:
           GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: python scripts/sync.py --days ${{ github.event.inputs.days || '7' }}
+        run: python scripts/sync.py --days ${{ github.event.inputs.days || '2' }}
