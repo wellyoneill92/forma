@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface Message {
   role: "user" | "assistant";
@@ -152,13 +154,36 @@ export default function ChatInterface() {
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             <div
-              className={`max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
+              className={`max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                 msg.role === "user"
-                  ? "bg-forma-text text-white rounded-br-md"
+                  ? "bg-forma-text text-white rounded-br-md whitespace-pre-wrap"
                   : "bg-white border border-forma-border text-forma-text rounded-bl-md"
               }`}
             >
-              {msg.content || (
+              {msg.content ? (
+                msg.role === "assistant" ? (
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                      strong: ({ children }) => <strong className="font-semibold text-forma-text">{children}</strong>,
+                      ul: ({ children }) => <ul className="list-disc list-inside space-y-0.5 mb-2">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal list-inside space-y-0.5 mb-2">{children}</ol>,
+                      li: ({ children }) => <li className="text-forma-text">{children}</li>,
+                      h1: ({ children }) => <h1 className="font-display font-bold text-base mb-1 mt-3 first:mt-0">{children}</h1>,
+                      h2: ({ children }) => <h2 className="font-display font-bold text-sm mb-1 mt-3 first:mt-0">{children}</h2>,
+                      h3: ({ children }) => <h3 className="font-semibold text-sm mb-1 mt-2 first:mt-0">{children}</h3>,
+                      hr: () => <hr className="border-forma-border my-3" />,
+                      table: ({ children }) => <div className="overflow-x-auto mb-2"><table className="text-xs w-full border-collapse">{children}</table></div>,
+                      th: ({ children }) => <th className="text-left font-semibold border-b border-forma-border pb-1 pr-4">{children}</th>,
+                      td: ({ children }) => <td className="py-0.5 pr-4 border-b border-forma-border/50">{children}</td>,
+                      code: ({ children }) => <code className="bg-forma-bg rounded px-1 font-mono text-xs">{children}</code>,
+                    }}
+                  >
+                    {msg.content}
+                  </ReactMarkdown>
+                ) : msg.content
+              ) : (
                 <span className="inline-flex gap-1 items-center text-forma-text-secondary">
                   <span className="animate-bounce" style={{ animationDelay: "0ms" }}>·</span>
                   <span className="animate-bounce" style={{ animationDelay: "150ms" }}>·</span>
