@@ -164,7 +164,7 @@ export async function buildCoachingContext(): Promise<CoachingContext> {
   // Use Melbourne time — Vercel servers run UTC and Jack is AEST/AEDT (UTC+10/+11)
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "Australia/Melbourne" });
   const weekStart = getMondayOfWeek(today);
-  const thirtyDaysAgo = subDays(today, 30);
+  const thirtyDaysAgo = subDays(today, 90);
 
   const [goals, wellness, activities, snapshots, plans] = await Promise.all([
     dbQuery("goals", {
@@ -178,7 +178,7 @@ export async function buildCoachingContext(): Promise<CoachingContext> {
     }),
     dbQuery("activities", {
       order: "start_time.desc",
-      limit: "40",
+      limit: "180",
     }),
     dbQuery("fitness_snapshots", {
       order: "date.desc",
