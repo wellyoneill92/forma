@@ -394,11 +394,20 @@ async def main(days: int) -> None:
     print(f"Forma sync — {today} — last {days} days")
     print("-" * 50)
 
-    async with httpx.AsyncClient(timeout=30) as http:
-        await sync_activities(garmin, http, activity_limit)
-        await sync_daily_wellness(garmin, http, dates)
-        await sync_fitness(garmin, http)
-        await sync_personal_records(garmin, http)
+    async with httpx.AsyncClient(timeout=90) as http:
+        for attempt in range(3):
+            try:
+                await sync_activities(garmin, http, activity_limit)
+                await sync_daily_wellness(garmin, http, dates)
+                await sync_fitness(garmin, http)
+                await sync_personal_records(garmin, http)
+                break
+            except Exception as e:
+                if attempt < 2:
+                    print(f"  ⚠ Attempt {attempt + 1} failed: {e} — retrying in 15s")
+                    await asyncio.sleep(15)
+                else:
+                    raise
 
     print("-" * 50)
     print("Sync complete.")
